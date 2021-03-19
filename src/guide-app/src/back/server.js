@@ -4,7 +4,7 @@ let app = express()
 let port = (8080 || process.env.PORT)
 let randomNum;
 
-app('/nearest'function(req,res){
+app('/nearest',function(req,res){
     randomNum = Math.floor(Math.random() * 101)
     if(randomNum % 2 == 0){
         res.send('WDF')

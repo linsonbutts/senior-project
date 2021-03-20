@@ -1,3 +1,4 @@
+import React from 'react'
 import Building from './components/Building'
 import Layout from './components/Layout'
 

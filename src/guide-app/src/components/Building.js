@@ -4,6 +4,7 @@ import React,{useState, useEffect} from 'react'
 import Woody from '../assets/library.jpg'
 import Arnett from '../assets/arnett.jpg'
 import Layout from './Layout'
+import InterestPoint from './InterestPoint'
 
 let BuildingPic = styled.img`
 width: 500px;
@@ -18,14 +19,12 @@ float: left;
 clear: left;
 `
 
-let Collage = styled.div`
-align: right;
-`
+
 let buildingText = [`
 This is Woodruff Library it is the campus library for blah blah blah blah blah blah blah blah
 blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
 blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+blah blah blah blah bl[h blah blah blah blah blah blah blah blah blah blah blah blah blah
 `,
 `
 This is Trevor Arnett it hosts the blah blah blah blah blah blah blah blah
@@ -70,6 +69,8 @@ handleNearest()
                         {nearestText}
                     </p>
                 </Popup>
+
+                <InterestPoint/>
         </Layout>
     )
 }

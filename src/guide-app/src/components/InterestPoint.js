@@ -12,6 +12,7 @@ let Collage = styled.div`
 margin: 10px;
 display: flex;
 flex-direction: column;
+align: right;
 `
 let InterestPic = styled.img`
 margin: 10px;
@@ -24,8 +25,8 @@ border-right: 10px solid rgba(240,0,0,0.6);
 border-bottom: 10px solid rgba(240,0,0,0.6);
 border-top: 10px solid rgba(240,0,0,0.6);
 padding: 15px;
-float: right;
-clear: right;
+float: left;
+clear: left;
 `
 
 let WoodyPointText = [
@@ -62,9 +63,15 @@ let axios = require('axios').default
 
 function InterestPoint(){
     let [click,setClick] = useState(false)
+    let [click1,setClick1] = useState(false)
+    let [click2,setClick2] = useState(false)
+
     let [interestPoints, setInterestPoints] = useState([WoodyArr])
     let [interestTexts,setInterestTexts] = useState([WoodyPointText])
+
     let handleClick = () => setClick(!click)
+    let handleClick1 = () => setClick1(!click)
+    let handleClick2 = () => setClick2(!click)
 
     let handleInterestPoints = async() => {
         let response = await axios.get('/nearest')
@@ -94,17 +101,17 @@ function InterestPoint(){
                 </p>
             </Popup>
 
-            <InterestPic src={interestPoints[1]} onClick={handleClick}>
+            <InterestPic src={interestPoints[1]} onClick={handleClick1}>
             </InterestPic>
-            <Popup trigger ={click}>
+            <Popup trigger ={click1}>
                 <p>
                     {interestTexts[1]}
                 </p>
             </Popup>
 
-            <InterestPic src={interestPoints[2]} onClick={handleClick}>
+            <InterestPic src={interestPoints[2]} onClick={handleClick2}>
             </InterestPic>
-            <Popup trigger ={click}>
+            <Popup trigger ={click2}>
                 <p>
                     {interestTexts[2]}
                 </p>

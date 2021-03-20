@@ -1,12 +1,13 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled,{keyframes} from 'styled-components'
 
 const FadeOutDiv = styled.div`
-  display: inline-block;
+  display: flex;
   visibility: ${props => props.out ? 'hidden' : 'visible'};
   animation: ${props => props.out ? fadeOut : fadeIn} 1s linear;
   transition: visibility 1s linear;
-  background-color: rgba(210,0,0,0.6);
+  border: solid rgba(210,0,0,0.6);
+  margin: 20px;
 `
 const fadeIn = keyframes`
   from {
@@ -23,12 +24,12 @@ const fadeIn = keyframes`
 const fadeOut = keyframes`
   from {
     transform: scale(1);
-    opacity: 0;
+    opacity: 1;
   }
 
   to {
     transform: scale(.25);
-    opacity: 1;
+    opacity: 0;
   }
 `;
 

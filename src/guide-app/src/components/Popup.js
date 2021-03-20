@@ -2,12 +2,14 @@ import React from 'react'
 import styled,{keyframes} from 'styled-components'
 
 const FadeOutDiv = styled.div`
-  display: flex;
+  display: inline-flex;
   visibility: ${props => props.out ? 'hidden' : 'visible'};
   animation: ${props => props.out ? fadeOut : fadeIn} 1s linear;
   transition: visibility 1s linear;
   border: solid rgba(210,0,0,0.6);
   margin: 20px;
+  padding 20px
+  flex-wrap: nowrap;
 `
 const fadeIn = keyframes`
   from {

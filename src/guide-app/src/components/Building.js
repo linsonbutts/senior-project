@@ -7,6 +7,7 @@ import Layout from './Layout'
 import InterestPoint from './InterestPoint'
 
 let BuildingPic = styled.img`
+display: flexbox;
 width: 500px;
 height: 300px;
 border-top-left-radius: 20px;
@@ -15,8 +16,8 @@ border-left: 10px solid rgba(240,0,0,0.6);
 border-bottom: 10px solid rgba(240,0,0,0.6);
 border-top: 10px solid rgba(240,0,0,0.6);
 padding: 20px;
-float: left;
-clear: left;
+float:left;
+clear: left
 `
 
 
@@ -62,6 +63,7 @@ handleNearest()
 },[])
     return(
         <Layout>
+            
             <BuildingPic src ={nearest} onClick ={handleClick}>
             </BuildingPic>
             <Popup trigger ={click}>
@@ -69,8 +71,7 @@ handleNearest()
                         {nearestText}
                     </p>
                 </Popup>
-
-                <InterestPoint/>
+            <InterestPoint/>
         </Layout>
     )
 }

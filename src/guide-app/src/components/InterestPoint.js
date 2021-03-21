@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React,{useState, useEffect} from 'react'
-import Layout from './Layout'
 import MuseumImage from '../assets/museum.jpg'
+import Layout from './Layout'
 import SpiritTime from '../assets/spiritTime.jpg'
 import CafeImage from '../assets/cafe.jpg'
 import ArchImage from '../assets/archives.jpg'
@@ -12,11 +12,11 @@ let Collage = styled.div`
 margin: 10px;
 display: flex;
 flex-direction: column;
-align: right;
 `
+
 let InterestPic = styled.img`
 margin: 10px;
-display: flex;
+display: flexbox;
 width: 250px;
 height: 250px;
 border-top-right-radius: 10px;
@@ -25,8 +25,8 @@ border-right: 10px solid rgba(240,0,0,0.6);
 border-bottom: 10px solid rgba(240,0,0,0.6);
 border-top: 10px solid rgba(240,0,0,0.6);
 padding: 15px;
-float: left;
-clear: left;
+float: right;
+clear: right;
 `
 
 let WoodyPointText = [
@@ -70,8 +70,8 @@ function InterestPoint(){
     let [interestTexts,setInterestTexts] = useState([WoodyPointText])
 
     let handleClick = () => setClick(!click)
-    let handleClick1 = () => setClick1(!click)
-    let handleClick2 = () => setClick2(!click)
+    let handleClick1 = () => setClick1(!click1)
+    let handleClick2 = () => setClick2(!click2)
 
     let handleInterestPoints = async() => {
         let response = await axios.get('/nearest')
@@ -93,13 +93,16 @@ function InterestPoint(){
     return(
         <Layout>
             <Collage>
+            
             <InterestPic src={interestPoints[0]} onClick={handleClick}>
             </InterestPic>
+
             <Popup trigger ={click}>
-                <p>
+                <p display="block">
                     {interestTexts[0]}
                 </p>
             </Popup>
+
 
             <InterestPic src={interestPoints[1]} onClick={handleClick1}>
             </InterestPic>

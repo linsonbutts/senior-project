@@ -1,16 +1,16 @@
 import React from 'react'
 import styled,{keyframes} from 'styled-components'
 
-const FadeOutDiv = styled.span`
+const FadeOutDiv = styled.div`
   display: flexbox;
+  height: 300px;
   visibility: ${props => props.out ? 'hidden' : 'visible'};
   animation: ${props => props.out ? fadeOut : fadeIn} 1s linear;
   transition: visibility 1s linear;
   border: solid rgba(210,0,0,0.6);
-  margin: 20px;
-  padding 20px
-  flex-wrap: nowrap;
-  flex-direction: row;
+  margin: 50px;
+  padding 10px;
+  align-items:stretch;
 `
 const fadeIn = keyframes`
   from {

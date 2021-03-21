@@ -1,18 +1,18 @@
 import styled from 'styled-components'
 import React,{useState, useEffect} from 'react'
 import MuseumImage from '../assets/museum.jpg'
-import Layout from './Layout'
+import SmallPop from './SmallPop'
 import SpiritTime from '../assets/spiritTime.jpg'
 import CafeImage from '../assets/cafe.jpg'
 import ArchImage from '../assets/archives.jpg'
 import SculptImage from '../assets/woodiSculpt.jpg'
-import Popup from './Popup'
 
-let Collage = styled.div`
+/*let Collage = styled.div`
 margin: 10px;
 display: flex;
 flex-direction: column;
-`
+justify-content: start;
+`*/
 
 let InterestPic = styled.img`
 margin: 10px;
@@ -25,8 +25,12 @@ border-right: 10px solid rgba(240,0,0,0.6);
 border-bottom: 10px solid rgba(240,0,0,0.6);
 border-top: 10px solid rgba(240,0,0,0.6);
 padding: 15px;
-float: right;
-clear: right;
+flex-basis: 25%;
+`
+
+let Break = styled.div`
+display: flexbox;
+flex-basis:100%;
 `
 
 let WoodyPointText = [
@@ -91,36 +95,39 @@ function InterestPoint(){
         },[])
     
     return(
-        <Layout>
-            <Collage>
+        <React.Fragment>
+
+            <Break></Break>
+            <Break></Break>
+            <Break></Break>
             
             <InterestPic src={interestPoints[0]} onClick={handleClick}>
             </InterestPic>
 
-            <Popup trigger ={click}>
+            <SmallPop trigger ={click}>
                 <p display="block">
                     {interestTexts[0]}
                 </p>
-            </Popup>
+            </SmallPop>
 
 
             <InterestPic src={interestPoints[1]} onClick={handleClick1}>
             </InterestPic>
-            <Popup trigger ={click1}>
+            <SmallPop trigger ={click1}>
                 <p>
                     {interestTexts[1]}
                 </p>
-            </Popup>
+            </SmallPop>
 
             <InterestPic src={interestPoints[2]} onClick={handleClick2}>
             </InterestPic>
-            <Popup trigger ={click2}>
+            <SmallPop trigger ={click2}>
                 <p>
                     {interestTexts[2]}
                 </p>
-            </Popup>
-            </Collage>
-        </Layout>
+            </SmallPop>
+
+        </React.Fragment>
     )
 
 }

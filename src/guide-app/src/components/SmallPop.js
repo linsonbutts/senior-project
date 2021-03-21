@@ -8,7 +8,7 @@ const FadeOutDiv = styled.div`
   transition: visibility 1s linear;
   border: solid rgba(210,0,0,0.6);
   padding 10px;
-  flex-basis:55%;
+  flex-basis:67%;
 `
 const fadeIn = keyframes`
   from {
@@ -34,7 +34,7 @@ const fadeOut = keyframes`
   }
 `;
 
-function Popup(props) {
+function SmallPop(props) {
 
 return(props.trigger)?
 (
@@ -44,4 +44,4 @@ return(props.trigger)?
 ):""
 }
 
-export default Popup
+export default SmallPop

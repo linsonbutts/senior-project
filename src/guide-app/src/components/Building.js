@@ -16,10 +16,8 @@ border-left: 10px solid rgba(240,0,0,0.6);
 border-bottom: 10px solid rgba(240,0,0,0.6);
 border-top: 10px solid rgba(240,0,0,0.6);
 padding: 20px;
-float:left;
-clear: left
+flex-basis: 35%;
 `
-
 
 let buildingText = [`
 This is Woodruff Library it is the campus library for blah blah blah blah blah blah blah blah
@@ -62,8 +60,8 @@ useEffect (()=>{
 handleNearest()
 },[])
     return(
-        <Layout>
-            
+        <React.Fragment>
+            <Layout>
             <BuildingPic src ={nearest} onClick ={handleClick}>
             </BuildingPic>
             <Popup trigger ={click}>
@@ -71,8 +69,11 @@ handleNearest()
                         {nearestText}
                     </p>
                 </Popup>
-            <InterestPoint/>
-        </Layout>
+
+                <InterestPoint/>
+            </Layout>
+            
+        </React.Fragment>
     )
 }
 

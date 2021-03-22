@@ -7,14 +7,14 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.21.1",
-    "bluetooth-terminal": "^1.4.2",
     "express": "^4.17.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
     "styled-components": "^5.2.1",
-    "web-vitals": "^1.1.1"
+    "web-vitals": "^1.1.1",
+    "webbluetooth": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -34,6 +34,8 @@ blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
 ]
 let axios = require('axios').default
 
+let microBT = require('microbit-web-bluetooth');
+
 
 function Building(){
 let [click,setClick] = useState(false)
@@ -55,6 +57,18 @@ let handleNearest = async () => {
 }
 
 let handleClick = () => setClick(!click)
+let BTcheck = async () => {
+    console.log('The button was pressed')
+    try{
+        let device = await microBT.requestMicrobit(window.navigator.bluetooth);
+        await device.gatt.connect()
+        await console.log(device.gatt.connected)
+        let services = await microBT.getServices(device)
+        console.log(services)
+    } catch(err){
+        console.log(err +' hurts')
+    }
+}
 
 useEffect (()=>{
 handleNearest()
@@ -69,6 +83,9 @@ handleNearest()
                         {nearestText}
                     </p>
                 </Popup>
+                <button onClick ={BTcheck}>
+                    Microbit connect
+                </button>
 
                 <InterestPoint/>
             </Layout>

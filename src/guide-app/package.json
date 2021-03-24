@@ -11,6 +11,7 @@
     "coffee-script": "^1.12.7",
     "express": "^4.17.1",
     "microbit-web-bluetooth": "^0.6.0",
+    "microblue": "^0.1.1",
     "node-gyp": "^7.1.2",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",

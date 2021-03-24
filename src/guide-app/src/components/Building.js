@@ -34,7 +34,7 @@ blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
 ]
 let axios = require('axios').default
 
-let microBT = require('microbit-web-bluetooth');
+let microBT = require('microbit-web-bluetooth')
 
 
 function Building(){
@@ -63,8 +63,8 @@ let BTcheck = async () => {
         let device = await microBT.requestMicrobit(window.navigator.bluetooth);
         await device.gatt.connect()
         await console.log(device.gatt.connected)
-        let services = await microBT.getServices(device)
-        console.log(services)
+        //let services = await microBT.getServices(device)
+        console.log(device.gatt)
     } catch(err){
         console.log(err +' hurts')
     }

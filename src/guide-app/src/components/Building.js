@@ -63,8 +63,8 @@ let BTcheck = async () => {
         let device = await microBT.requestMicrobit(window.navigator.bluetooth);
         await device.gatt.connect()
         await console.log(device.gatt.connected)
-        //let services = await microBT.getServices(device)
-        console.log(device.gatt)
+        let services = await microBT.getServices(device)
+        console.log(services)
     } catch(err){
         console.log(err +' hurts')
     }

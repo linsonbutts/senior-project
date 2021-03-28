@@ -36,12 +36,12 @@ const fadeOut = keyframes`
 
 function Popup(props) {
 
-return(props.trigger)?
-(
-<FadeOutDiv>
-{props.children}
-</FadeOutDiv>
-):""
-}
+  return(props.trigger)?
+  (
+  <FadeOutDiv>
+  {props.children}
+  </FadeOutDiv>
+  ):""
+  }
 
 export default Popup

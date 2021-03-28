@@ -18,6 +18,18 @@ border-top: 10px solid rgba(240,0,0,0.6);
 padding: 20px;
 flex-basis: 35%;
 `
+let MicroButton = styled.button`
+display: flexbox;
+flex-basis: 90%;
+background-color: rgba(210,0,0, 0.9);
+justify-content: center;
+color: white;
+padding: 20px;
+margin: 15px;
+border: 10px solid rgba(200,200,200,.5);
+border-radius: 20px;
+font-size: 25px;
+`
 
 let buildingText = [`
 This is Woodruff Library it is the campus library for blah blah blah blah blah blah blah blah
@@ -35,7 +47,7 @@ blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
 let axios = require('axios').default
 
 let microBT = require('microbit-web-bluetooth')
-
+//const eventHandler = event => console.log(`${event.type}: ${JSON.stringify(event.detail, null, 2)}`);
 
 function Building(){
 let [click,setClick] = useState(false)
@@ -48,7 +60,7 @@ let handleNearest = async () => {
 
     if(data == "WDF"){
         setNearest(Woody)
-        setNearestText(buildingText[0])
+       setNearestText(buildingText[0])
     }
     else if(data == "ARN"){
         setNearest(Arnett)
@@ -64,7 +76,7 @@ let BTcheck = async () => {
         await device.gatt.connect()
         await console.log(device.gatt.connected)
         let services = await microBT.getServices(device)
-        console.log(services)
+        console.log(services.buttonService.readButtonAState)
     } catch(err){
         console.log(err +' hurts')
     }
@@ -75,7 +87,12 @@ handleNearest()
 },[])
     return(
         <React.Fragment>
+         
+            <script type="text/javascript" src="microbit.umd.js"></script>
             <Layout>
+            <MicroButton onClick ={BTcheck}>
+                    Microbit Connect
+                </MicroButton>
             <BuildingPic src ={nearest} onClick ={handleClick}>
             </BuildingPic>
             <Popup trigger ={click}>
@@ -83,9 +100,6 @@ handleNearest()
                         {nearestText}
                     </p>
                 </Popup>
-                <button onClick ={BTcheck}>
-                    Microbit connect
-                </button>
 
                 <InterestPoint/>
             </Layout>

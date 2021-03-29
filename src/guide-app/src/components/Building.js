@@ -1,10 +1,12 @@
 import Popup from './Popup'
 import styled from 'styled-components'
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect,useRef} from 'react'
 import Woody from '../assets/library.jpg'
 import Arnett from '../assets/arnett.jpg'
 import Layout from './Layout'
 import InterestPoint from './InterestPoint'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import 'react-tabs/style/react-tabs.css';
 
 let BuildingPic = styled.img`
 display: flexbox;
@@ -18,6 +20,7 @@ border-top: 10px solid rgba(240,0,0,0.6);
 padding: 20px;
 flex-basis: 35%;
 `
+
 let MicroButton = styled.button`
 display: flexbox;
 flex-basis: 90%;
@@ -45,14 +48,44 @@ blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
 `
 ]
 let axios = require('axios').default
-
 let microBT = require('microbit-web-bluetooth')
-//const eventHandler = event => console.log(`${event.type}: ${JSON.stringify(event.detail, null, 2)}`);
 
 function Building(){
+let [tabIndex, setTabIndex] = useState(0);
 let [click,setClick] = useState(false)
 let [nearest, setNearest] = useState(Woody)
 let [nearestText,setNearestText] = useState(buildingText[0])
+const iotDevice = useRef('')
+let iotTemp = useRef('')
+
+const tempHandler = async (event) => {
+    iotTemp.current = event.detail
+    console.log(iotTemp.current)
+    await axios.post('/nearest',{
+        Temperature: iotTemp.current.toString()
+    })
+    handleNearest()
+}
+
+//Used to connect to microBit
+let BTcheck = async () => {
+    console.log('The button was pressed')
+    try{
+        let device = await microBT.requestMicrobit(window.navigator.bluetooth);
+        await device.gatt.connect()
+        await console.log(device.gatt.connected)
+        iotDevice.current = await microBT.getServices(device)
+        console.log(iotDevice.current)
+        //Services are then logged
+        //and Reference objects set equal to them
+        await iotDevice.current.temperatureService.setTemperaturePeriod(3000)
+        await iotDevice.current.temperatureService.addEventListener("temperaturechanged",tempHandler)
+
+    }catch(err){
+        console.log(err +' hurts')
+    }
+}
+
 
 let handleNearest = async () => {
     let response = await axios.get('/nearest')
@@ -69,31 +102,27 @@ let handleNearest = async () => {
 }
 
 let handleClick = () => setClick(!click)
-let BTcheck = async () => {
-    console.log('The button was pressed')
-    try{
-        let device = await microBT.requestMicrobit(window.navigator.bluetooth);
-        await device.gatt.connect()
-        await console.log(device.gatt.connected)
-        let services = await microBT.getServices(device)
-        console.log(services.buttonService.readButtonAState)
-    } catch(err){
-        console.log(err +' hurts')
-    }
-}
 
 useEffect (()=>{
 handleNearest()
-},[])
+},[iotTemp])
     return(
+     
         <React.Fragment>
-         
             <script type="text/javascript" src="microbit.umd.js"></script>
             <Layout>
             <MicroButton onClick ={BTcheck}>
                     Microbit Connect
                 </MicroButton>
-            <BuildingPic src ={nearest} onClick ={handleClick}>
+
+                <div>
+                <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
+                    <TabList>
+                        <Tab>Buildings</Tab>
+                        <Tab>Data</Tab>
+                    </TabList>
+                    <TabPanel>
+                    <BuildingPic src ={nearest} onClick ={handleClick}>
             </BuildingPic>
             <Popup trigger ={click}>
                     <p>
@@ -102,6 +131,10 @@ handleNearest()
                 </Popup>
 
                 <InterestPoint/>
+                    </TabPanel>
+                    <TabPanel></TabPanel>
+                    </Tabs>
+                    </div>
             </Layout>
             
         </React.Fragment>

@@ -57,6 +57,12 @@ let [nearest, setNearest] = useState(Woody)
 let [nearestText,setNearestText] = useState(buildingText[0])
 const iotDevice = useRef('')
 let iotTemp = useRef('')
+//Used to track the total session and building time.
+let connectionTime = useRef('')
+let arnTime = useRef(0)
+let woodTime = useRef(0)
+let arnRunning = false
+let woodRunning = false
 
 const tempHandler = async (event) => {
     iotTemp.current = event.detail
@@ -67,8 +73,53 @@ const tempHandler = async (event) => {
     handleNearest()
 }
 
+const buttonA_Handler = (event) => {
+    if(event.detail == 1){
+        arnRunning = true;
+        woodRunning = false;
+    }
+    if(event.detail == 2){
+        arnRunning = false
+    }   
+}
+const buttonB_Handler = (event) => {
+    if(event.detail == 1){
+        woodRunning = true
+        arnRunning = false;
+    }
+    else if(event.detail == 2){
+        woodRunning = false
+    }
+}
+
+function addWoodyTime(){
+    if(woodRunning == false){
+        return
+    }
+    else{
+        woodTime.current +=1
+        console.log("Time spent in WOOD: "+woodTime.current)
+    };
+}
+function addArnTime(){
+    if(arnRunning == false){
+        return
+    }
+    else{
+        arnTime.current +=1
+        console.log("Time spent in ARN: "+arnTime.current)
+    };
+}
+
+var arnInterval = setInterval(addArnTime,1000)
+var woodInterval = setInterval(addWoodyTime,1000)
+
 //Used to connect to microBit
 let BTcheck = async () => {
+    //Used to read how long a user spends connected to microbit
+    setInterval(function(){
+        connectionTime +=1
+    },1000);
     console.log('The button was pressed')
     try{
         let device = await microBT.requestMicrobit(window.navigator.bluetooth);
@@ -78,8 +129,11 @@ let BTcheck = async () => {
         console.log(iotDevice.current)
         //Services are then logged
         //and Reference objects set equal to them
+
         await iotDevice.current.temperatureService.setTemperaturePeriod(3000)
         await iotDevice.current.temperatureService.addEventListener("temperaturechanged",tempHandler)
+        await iotDevice.current.buttonService.addEventListener("buttonastatechanged",buttonA_Handler)
+        await iotDevice.current.buttonService.addEventListener("buttonbstatechanged",buttonB_Handler)
 
     }catch(err){
         console.log(err +' hurts')
@@ -132,7 +186,9 @@ handleNearest()
 
                 <InterestPoint/>
                     </TabPanel>
-                    <TabPanel></TabPanel>
+                    <TabPanel>
+
+                    </TabPanel>
                     </Tabs>
                     </div>
             </Layout>

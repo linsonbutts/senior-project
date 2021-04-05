@@ -6,6 +6,7 @@ import Arnett from '../assets/arnett.jpg'
 import Layout from './Layout'
 import InterestPoint from './InterestPoint'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import {BarChart,Tooltip,Bar, Legend, CartesianGrid, XAxis, YAxis} from 'recharts';
 import 'react-tabs/style/react-tabs.css';
 
 let BuildingPic = styled.img`
@@ -57,13 +58,19 @@ let [nearest, setNearest] = useState(Woody)
 let [nearestText,setNearestText] = useState(buildingText[0])
 const iotDevice = useRef('')
 let iotTemp = useRef('')
+
 //Used to track the total session and building time.
-let connectionTime = useRef('')
+let connectionTime = useRef(0)
 let arnTime = useRef(0)
 let woodTime = useRef(0)
 let arnRunning = false
 let woodRunning = false
 
+//Used for building the charts
+const barData = [
+    {name: "Arnett Time", atime: arnTime.current},
+    {name: "Woody Time", wtime:  woodTime.current}
+]
 const tempHandler = async (event) => {
     iotTemp.current = event.detail
     console.log(iotTemp.current)
@@ -113,7 +120,6 @@ function addArnTime(){
 
 var arnInterval = setInterval(addArnTime,1000)
 var woodInterval = setInterval(addWoodyTime,1000)
-
 //Used to connect to microBit
 let BTcheck = async () => {
     //Used to read how long a user spends connected to microbit
@@ -186,8 +192,17 @@ handleNearest()
 
                 <InterestPoint/>
                     </TabPanel>
+                    
                     <TabPanel>
-
+                    <BarChart width={730} height={250} data={barData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="atime" fill="#8884d8" />
+                        <Bar dataKey="wtime" fill="#82ca9d" />
+                    </BarChart>
                     </TabPanel>
                     </Tabs>
                     </div>

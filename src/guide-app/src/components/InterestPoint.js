@@ -90,7 +90,9 @@ function InterestPoint(){
             setInterestTexts(ArnPointText)
         }
     }
+    
     useEffect (()=>{
+        setInterval(handleInterestPoints,3000)
         handleInterestPoints()
         },[])
     

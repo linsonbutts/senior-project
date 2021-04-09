@@ -53,13 +53,18 @@ let microBT = require('microbit-web-bluetooth')
 
 function Building(){
 let [tabIndex, setTabIndex] = useState(0);
+let [envClick, setEnvClick] = useState(false);
 let [click,setClick] = useState(false)
 let [nearest, setNearest] = useState(Woody)
 let [nearestText,setNearestText] = useState(buildingText[0])
 let arnTime = useRef(0)
 let woodTime = useRef(0)
 const iotDevice = useRef('')
-let iotTemp = useRef('')
+let iotLight = useRef('')
+let tempArr = []
+let avgTemp;
+let lightArr = []
+let avgLight;
 
 //Used to track the total session and building time.
 //Will update the time data for pie and bar chart
@@ -71,6 +76,11 @@ let woodRunning = false
 let neitherPercent = useRef(0);
 let arnPercent = useRef(0);
 let woodPercent = useRef(0);
+
+//Used to set pins to read on microBit
+const Ad_char = "e95d5899-251d-470a-a062-fa1922dfa9a8";
+const Io_char = "e95db9fe-251d-470a-a062-fa1922dfa9a8";
+let cmd = new Uint32Array([0x01]); 
 
 //Used for building the charts
 const barData = [
@@ -84,31 +94,49 @@ const pieData = [
 ]
 
 const tempHandler = async (event) => {
-    iotTemp.current = event.detail
-    console.log(iotTemp.current)
-    await axios.post('/nearest',{
-        Temperature: iotTemp.current.toString()
-    })
-    handleNearest()
+    let oldTAvg = avgTemp
+            console.log("This is the temperature:"+ event.detail)
+            if(tempArr.length < 3){
+                tempArr.push(event.detail)
+                console.log(tempArr)
+            }
+            else if(tempArr.length == 3){
+                avgTemp = tempArr[0]+tempArr[1]+tempArr[2]/3
+                tempArr.shift()
+            }
+            else if(oldTAvg != null)
+                if(oldTAvg <= avgTemp - 10 || oldTAvg >= avgTemp + 10){
+                    setEnvClick(true)
+                }
 }
 
 const buttonA_Handler = (event) => {
     if(event.detail == 1){
         arnRunning = true
         woodRunning = false
+        axios.post('/nearest',{
+            ButtonPressA: event.detail
+        })
+        handleNearest()  
     }
     if(event.detail == 2){
         arnRunning = false
-    }   
+    } 
+    
 }
 const buttonB_Handler = (event) => {
     if(event.detail == 1){
         woodRunning = true
         arnRunning = false
+        axios.post('/nearest',{
+            ButtonPressB: event.detail
+        })
+        handleNearest()
     }
     else if(event.detail == 2){
         woodRunning = false
     }
+    
 }
 
 function addWoodySec(){
@@ -154,16 +182,35 @@ let BTcheck = async () => {
         let device = await microBT.requestMicrobit(window.navigator.bluetooth);
         await device.gatt.connect()
         await console.log(device.gatt.connected)
-        let services = await microBT.getServices(device)
         iotDevice.current = await microBT.getServices(device)
+        let services = await microBT.getServices(device)
         console.log(iotDevice.current)
-        //Services are then logged
-        //and Reference objects set equal to them
-
+        
+        //Configure the IO pin service to read. Currently updates too fast
+        services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
+        services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
         await iotDevice.current.temperatureService.setTemperaturePeriod(3000)
         await iotDevice.current.temperatureService.addEventListener("temperaturechanged",tempHandler)
         await iotDevice.current.buttonService.addEventListener("buttonastatechanged",buttonA_Handler)
         await iotDevice.current.buttonService.addEventListener("buttonbstatechanged",buttonB_Handler)
+        setInterval(async function(){
+            console.log("This is services here:"+ services)
+            let oldLAvg = avgLight
+            iotLight.current = services.ioPinService.readPinData()
+            console.log("This is the light sense:"+ iotLight.current)
+            if(lightArr.length < 3){
+                lightArr.push(iotLight.current)
+            }
+            else if(lightArr.length == 3){
+                avgLight = lightArr[0]+lightArr[1]+lightArr[2]/3
+                lightArr.shift()
+            }
+            else if(oldLAvg != null)
+                if(oldLAvg <= avgLight - 50 || oldLAvg >= avgLight + 50){
+                    setEnvClick(true)
+                }
+        },3000)
+        //await iotDevice.current.ioPinService.addEventListener("pindatachanged",pinData_Handler)
 
     }catch(err){
         console.log(err +' hurts')
@@ -174,6 +221,7 @@ let BTcheck = async () => {
 let handleNearest = async () => {
     let response = await axios.get('/nearest')
     let data = await response.data
+    console.log(data);
 
     if(data == "WDF"){
         setNearest(Woody)
@@ -186,6 +234,7 @@ let handleNearest = async () => {
 }
 
 let handleClick = () => setClick(!click)
+let handleEnvClick = () => setEnvClick(false)
 
     return(
      
@@ -199,10 +248,17 @@ let handleClick = () => setClick(!click)
                     Microbit Connect
                 </MicroButton>
                 <p>
-                    Hit A or B on microBit to indicate you have entered a building. <br></br>
+                    Hit A or B on microBit to indicate you have entered a building. A for Arnett and B for Woodruff <br></br>
                     You will be asked if you have entered a building <br></br>
                     if the environment around you has changed
                 </p>
+                <Popup trigger={envClick} onClick ={handleEnvClick}>
+                    <p>
+                    Hey it seems like the environment around you has changed
+                    Remember to press A or B to indicate which building you have entered
+                    and hold A or B if you have exited a building
+                    </p>
+                </Popup>
                 <div>
                 <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
                     <TabList>

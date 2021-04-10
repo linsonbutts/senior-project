@@ -60,7 +60,6 @@ let [nearestText,setNearestText] = useState(buildingText[0])
 let arnTime = useRef(0)
 let woodTime = useRef(0)
 const iotDevice = useRef('')
-let iotLight = useRef('')
 let tempArr = []
 let avgTemp;
 let lightArr = []
@@ -92,21 +91,24 @@ const pieData = [
     {name: "% of time in Arnett", Time_Percentage: arnPercent.current},
     {name: "% of time in Woodruff", Time_Percentage: woodPercent.current}
 ]
-
+let oldTAvg;
 const tempHandler = async (event) => {
-    let oldTAvg = avgTemp
-            console.log("This is the temperature:"+ event.detail)
-            if(tempArr.length < 3){
+    console.log("This is the tempArr: "+ tempArr)
+            if(lightArr.length < 3){ 
+                oldTAvg = avgTemp;
                 tempArr.push(event.detail)
-                console.log(tempArr)
             }
-            else if(tempArr.length == 3){
-                avgTemp = tempArr[0]+tempArr[1]+tempArr[2]/3
-                tempArr.shift()
+            else if(lightArr.length == 3){
+                avgTemp = (tempArr[0]+tempArr[1]+tempArr[2])/3
+                tempArr = []
+                console.log("this the avg temp: "+avgTemp)
+                console.log("this is the old average temp: "+ avgTemp)
             }
-            else if(oldTAvg != null)
-                if(oldTAvg <= avgTemp - 10 || oldTAvg >= avgTemp + 10){
+            else if(oldTAvg != undefined)
+                console.log("we made it here temp edition:"+avgTemp)
+                if(oldTAvg < avgTemp - 8 || oldTAvg > avgTemp + 8){
                     setEnvClick(true)
+                    console.log("The pop up should pop up:  "+envClick)
                 }
 }
 
@@ -186,28 +188,32 @@ let BTcheck = async () => {
         let services = await microBT.getServices(device)
         console.log(iotDevice.current)
         
-        //Configure the IO pin service to read. Currently updates too fast
+        //Configure the IO pin service to read.
         services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
         services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
         await iotDevice.current.temperatureService.setTemperaturePeriod(3000)
         await iotDevice.current.temperatureService.addEventListener("temperaturechanged",tempHandler)
         await iotDevice.current.buttonService.addEventListener("buttonastatechanged",buttonA_Handler)
         await iotDevice.current.buttonService.addEventListener("buttonbstatechanged",buttonB_Handler)
+        let oldLAvg
         setInterval(async function(){
-            console.log("This is services here:"+ services)
-            let oldLAvg = avgLight
-            iotLight.current = services.ioPinService.readPinData()
-            console.log("This is the light sense:"+ iotLight.current)
-            if(lightArr.length < 3){
-                lightArr.push(iotLight.current)
+            let lightValue = await services.ioPinService.readPinData()
+            console.log("This is the Light Array: "+ lightArr)
+            if(lightArr.length < 3){ 
+                oldLAvg = avgLight;
+                lightArr.push(lightValue[0].value)
             }
             else if(lightArr.length == 3){
-                avgLight = lightArr[0]+lightArr[1]+lightArr[2]/3
-                lightArr.shift()
+                avgLight = (lightArr[0]+lightArr[1]+lightArr[2])/3
+                lightArr = []
+                console.log("this the avg Light: "+avgLight)
+                console.log("this is the old average: "+ oldLAvg)
             }
-            else if(oldLAvg != null)
-                if(oldLAvg <= avgLight - 50 || oldLAvg >= avgLight + 50){
+            else if(oldLAvg != undefined)
+                console.log("we made it here"+avgLight)
+                if(oldLAvg < avgLight - 50 || oldLAvg > avgLight + 50){
                     setEnvClick(true)
+                    console.log("The pop up should pop up:  "+envClick)
                 }
         },3000)
         //await iotDevice.current.ioPinService.addEventListener("pindatachanged",pinData_Handler)
@@ -252,12 +258,14 @@ let handleEnvClick = () => setEnvClick(false)
                     You will be asked if you have entered a building <br></br>
                     if the environment around you has changed
                 </p>
-                <Popup trigger={envClick} onClick ={handleEnvClick}>
+                <Popup trigger={envClick}>
+                    <div onClick = {handleEnvClick}>
                     <p>
                     Hey it seems like the environment around you has changed
                     Remember to press A or B to indicate which building you have entered
                     and hold A or B if you have exited a building
                     </p>
+                    </div>
                 </Popup>
                 <div>
                 <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>

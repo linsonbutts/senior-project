@@ -34,18 +34,37 @@ flex-basis:100%;
 `
 
 let WoodyPointText = [
-    `This is the Woody Cafe blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah`
+    `Woodi Café reopened in August 2018 after undergoing an extensive overhaul to update 
+    the café’s look and offerings. Boasting new furniture and menu items, the farm-to-fork café serves a wide array of nutritious and affordable items such as tasty breakfast sandwiches, house-made pastries, chef-inspired soups and pastas and signature sandwiches and salads.
+
+    The updated food service is part of the Library’s continuing effort 
+    to enhance services for Atlanta University Center students, faculty and visitors. 
+    Woodi Café is located on the main level of the AUC Woodruff Library
+    
+            Hours: 
+        Sunday	Closed
+        Monday	    9AM–9PM
+        Tuesday	    9AM–9PM
+        Wednesday	9AM–9PM
+        Thursday	9AM–9PM
+        Friday	    9AM–3:30PM
+        Saturday	Closed
+    `
 ,
-`This is one of the many sculptures and art pieces within the Woodruff Library blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah`
+`This is one of the many sculptures and art pieces within the Woodruff Library. 
+Whether in the Library to study, research, or simply relax, our students and faculty 
+experience vibrant art collections that are not only educationally enriching but also aesthetically pleasing. 
+The striking art on display throughout the Library reflects the vision of our Knowledge & Arts Initiative, 
+which is to promote student pride and ownership of the Library, convey the human experience, 
+and inspire student thought and conversations through the visual arts.
+
+Representing a broad spectrum of disciplines, including sculpture, paintings, drawings, and photography, 
+the impressive works are created and loaned by artists from across the country.
+Programs and tours on the art are offered throughout the year.`
 ,
-`These are the archives of the Woodruff Library blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah`
+`These are the archives of the Woodruff Library. The Archives Research Center has many individual, familial, and organizational collections. 
+The archives are located on the upper level of the Library in the Virginia Lacy Jones Exhibition Hall. The archives collection can be viewed online
+and similarly students can make appointments to view the archives.`
 ]
 let ArnPointText = [
     `This is the sculpture Spiritual Time blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah

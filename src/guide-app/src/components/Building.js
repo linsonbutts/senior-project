@@ -36,16 +36,46 @@ font-size: 25px;
 `
 
 let buildingText = [`
-This is Woodruff Library it is the campus library for blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah bl[h blah blah blah blah blah blah blah blah blah blah blah blah blah
+Constructed in 1982, the Atlanta University Center (AUC) 
+Robert W. Woodruff Library is named in honor of the late Robert Winship Woodruff, 
+philanthropist and former CEO of The Coca-Cola Company. The Library not only services
+Clark Atlanta University Students but all other AUC students.
+It's services include not only the typical function of libraries but also room reservations for studying
+and practicing presentations, free wifi for students, Mac and Windows PCs for students, printing services, etc.
+
+    Building Hours: Feb 1-May 7
+Monday – Thursday: 7:30 am – 9pm
+Friday: 7:30 am – 6pm
+Saturday: Closed
+Sunday: 12 pm – 9pm
+    Virtual Hours
+Monday – Thursday: 9am – 10pm
+Friday: 9am – 6pm
+Saturday: 12pm – 6pm
+Sunday: 12pm – 10pm
 `,
 `
-This is Trevor Arnett it hosts the blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+Named after the late Trevor Arnett who served as a trustee of the
+Rockefeller Foundation, the Rockefeller Institute for Medical Research, the Davison Fund, Atlanta University, 
+Morehouse College, and was President of the Board of Trustees of Spelman College.
+He would then be recognized in his life as an authority on the matter of financial administration of colleges
+and universities and authored various publications on the matter, including College and University Finance.
+
+In 1942 Trevor Arnett Library under the direction of Hale Woodruff, the annual Exhibition
+of Paintings,Prints, and Sculpture by Negro Artists of America (later known as Atlanta University
+Art Gallery), to provide black artists a national forum to show their work. The last Exhibition
+would take place in 1970. Overtime the hall had been repurposed for the services it is known for today
+such as housing the Registrar's office as well as the President's office, though in 1994 the gallery of works present would be renamed
+what we now know it as today the Clark Atlanta University Art Museum.
+
+\n Hours for the Museum Gallery:
+Monday:	    Closed
+Tuesday:	11:00 am - 4:00 pm
+Wednesday:	11:00 am - 4:00 pm
+Thursday:	11:00 am - 4:00 pm
+Friday:	    11:00 am - 4:00 pm
+Saturday:	Closed
+Sunday:	    Closed
 `
 ]
 let axios = require('axios').default
@@ -59,7 +89,6 @@ let [nearest, setNearest] = useState(Woody)
 let [nearestText,setNearestText] = useState(buildingText[0])
 let arnTime = useRef(0)
 let woodTime = useRef(0)
-const iotDevice = useRef('')
 let tempArr = []
 let avgTemp;
 let lightArr = []
@@ -111,6 +140,10 @@ const tempHandler = async (event) => {
                     console.log("The pop up should pop up:  "+envClick)
                 }
 }
+
+/*const magnetHandler = (event) =>{
+    console.log("Here's the magnetometer reading:" +event.detail.y)
+}*/
 
 const buttonA_Handler = (event) => {
     if(event.detail == 1){
@@ -184,20 +217,23 @@ let BTcheck = async () => {
         let device = await microBT.requestMicrobit(window.navigator.bluetooth);
         await device.gatt.connect()
         await console.log(device.gatt.connected)
-        iotDevice.current = await microBT.getServices(device)
         let services = await microBT.getServices(device)
-        console.log(iotDevice.current)
+        console.log(services)
         
         //Configure the IO pin service to read.
-        services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
-        services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
-        await iotDevice.current.temperatureService.setTemperaturePeriod(3000)
-        await iotDevice.current.temperatureService.addEventListener("temperaturechanged",tempHandler)
-        await iotDevice.current.buttonService.addEventListener("buttonastatechanged",buttonA_Handler)
-        await iotDevice.current.buttonService.addEventListener("buttonbstatechanged",buttonB_Handler)
+        await services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
+        await services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
+        await services.temperatureService.setTemperaturePeriod(3000)
+        services.magnetometerService.setMagnetometerPeriod(10000)
+       
+        //await services.magnetometerService.addEventListener("magnetometerbearingchanged",magnetHandler)
+        await services.temperatureService.addEventListener("temperaturechanged",tempHandler)
+        await services.buttonService.addEventListener("buttonastatechanged",buttonA_Handler)
+        await services.buttonService.addEventListener("buttonbstatechanged",buttonB_Handler)
         let oldLAvg
         setInterval(async function(){
-            let lightValue = await services.ioPinService.readPinData()
+            try{
+                let lightValue = await services.ioPinService.readPinData()
             console.log("This is the Light Array: "+ lightArr)
             if(lightArr.length < 3){ 
                 oldLAvg = avgLight;
@@ -215,13 +251,40 @@ let BTcheck = async () => {
                     setEnvClick(true)
                     console.log("The pop up should pop up:  "+envClick)
                 }
-        },3000)
-        //await iotDevice.current.ioPinService.addEventListener("pindatachanged",pinData_Handler)
+        }
+        catch(err){
+            console.log(err + "pain")
+        }
+    },3000)
+
+    setInterval(async function(){
+        try{
+            console.log((await services.magnetometerService.readMagnetometerData()).x)
+            console.log((await services.magnetometerService.readMagnetometerData()).y)
+            console.log((await services.magnetometerService.readMagnetometerData()).z)
+        }catch(err){
+            console.log(err+ " suffering")
+        }
+    },3000)
 
     }catch(err){
         console.log(err +' hurts')
     }
 }
+//Create filter for interest point beacons
+let options = { 
+    filters:[
+        {services: ['2eaaf8b0-e034-49fe-9dc3-b88b8c2b77e3']}
+    ]
+}
+let handleInterestScan = () =>{
+    navigator.bluetooth.requestDevice({"acceptAllDevices": true}).then(function(beacon){
+        console.log("did it work?"+beacon.id)
+    }
+        
+    )
+}
+
 
 
 let handleNearest = async () => {
@@ -266,8 +329,14 @@ let handleEnvClick = () => setEnvClick(false)
                     and hold A or B if you have exited a building
                     </p>
                     </div>
+
+                
                 </Popup>
                 <div>
+                
+                <MicroButton onClick ={handleInterestScan}>
+                    Check Interest Points
+                </MicroButton>
                 <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
                     <TabList>
                         <Tab>Buildings</Tab>

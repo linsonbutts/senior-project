@@ -42,13 +42,13 @@ let WoodyPointText = [
     Woodi Café is located on the main level of the AUC Woodruff Library
     
             Hours: 
-        Sunday	Closed
-        Monday	    9AM–9PM
-        Tuesday	    9AM–9PM
-        Wednesday	9AM–9PM
-        Thursday	9AM–9PM
-        Friday	    9AM–3:30PM
-        Saturday	Closed
+        Sunday	    Closed,
+        Monday	    9AM–9PM,
+        Tuesday	    9AM–9PM,
+        Wednesday	9AM–9PM,
+        Thursday	9AM–9PM,
+        Friday	    9AM–3:30PM,
+        Saturday	Closed,
     `
 ,
 `This is one of the many sculptures and art pieces within the Woodruff Library. 

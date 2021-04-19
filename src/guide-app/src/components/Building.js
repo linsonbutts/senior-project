@@ -6,21 +6,9 @@ import Arnett from '../assets/arnett.jpg'
 import Layout from './Layout'
 import InterestPoint from './InterestPoint'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import {BarChart,Tooltip,Bar, Legend, CartesianGrid, XAxis, YAxis, PieChart, Pie} from 'recharts';
+import {BarChart,Tooltip,Bar, Legend, CartesianGrid, XAxis, YAxis, PieChart, Pie, ResponsiveContainer} from 'recharts';
 import 'react-tabs/style/react-tabs.css';
-
-let BuildingPic = styled.img`
-display: flexbox;
-width: 500px;
-height: 300px;
-border-top-left-radius: 20px;
-border-bottom-left-radius: 20px;
-border-left: 10px solid rgba(240,0,0,0.6);
-border-bottom: 10px solid rgba(240,0,0,0.6);
-border-top: 10px solid rgba(240,0,0,0.6);
-padding: 20px;
-flex-basis: 35%;
-`
+import {mediaController} from './mediaController'
 
 let MicroButton = styled.button`
 display: flexbox;
@@ -34,6 +22,31 @@ border: 10px solid rgba(200,200,200,.5);
 border-radius: 20px;
 font-size: 25px;
 `
+let BPic = styled.img`
+display: flexbox;
+width: 1000px;
+height: 300px;
+border-top-left-radius: 20px;
+border-bottom-left-radius: 20px;
+border-left: 10px solid rgba(240,0,0,0.6);
+border-bottom: 10px solid rgba(240,0,0,0.6);
+border-top: 10px solid rgba(240,0,0,0.6);
+padding: 20px;
+flex-basis: 35%;
+
+@media ${mediaController.laptop}{
+    max-width: 500px;
+}
+@media ${mediaController.mobileS}{
+    max-width: 150px;    
+}
+@media ${mediaController.mobileM}{
+    max-width: 250px;    
+}
+@media ${mediaController.mobileL}{
+    max-width: 325px;    
+}
+`
 
 let buildingText = [`
 Constructed in 1982, the Atlanta University Center (AUC) 
@@ -43,17 +56,18 @@ Clark Atlanta University Students but all other AUC students.
 It's services include not only the typical function of libraries but also room reservations for studying
 and practicing presentations, free wifi for students, Mac and Windows PCs for students, printing services, etc.
 
-    Building Hours: Feb 1-May 7
-Monday – Thursday: 7:30 am – 9pm
-Friday: 7:30 am – 6pm
-Saturday: Closed
-Sunday: 12 pm – 9pm
-    Virtual Hours
-Monday – Thursday: 9am – 10pm
-Friday: 9am – 6pm
-Saturday: 12pm – 6pm
-Sunday: 12pm – 10pm
-`,
+
+                    Building Hours: Feb 1-May 7
+                    Monday – Thursday: 7:30 am – 9pm
+                    Friday: 7:30 am – 6pm
+                    Saturday: Closed
+                    Sunday: 12 pm – 9pm
+                        Virtual Hours
+                    Monday – Thursday: 9am – 10pm
+                    Friday: 9am – 6pm
+                    Saturday: 12pm – 6pm
+                    Sunday: 12pm – 10pm
+                    `,
 `
 Named after the late Trevor Arnett who served as a trustee of the
 Rockefeller Foundation, the Rockefeller Institute for Medical Research, the Davison Fund, Atlanta University, 
@@ -68,16 +82,18 @@ would take place in 1970. Overtime the hall had been repurposed for the services
 such as housing the Registrar's office as well as the President's office, though in 1994 the gallery of works present would be renamed
 what we now know it as today the Clark Atlanta University Art Museum.
 
-\n Hours for the Museum Gallery:
-Monday:	    Closed
-Tuesday:	11:00 am - 4:00 pm
-Wednesday:	11:00 am - 4:00 pm
-Thursday:	11:00 am - 4:00 pm
-Friday:	    11:00 am - 4:00 pm
-Saturday:	Closed
-Sunday:	    Closed
-`
+
+                    Hours for the Museum Gallery:
+                    Monday:	    Closed
+                    Tuesday:	11:00 am - 4:00 pm
+                    Wednesday:	11:00 am - 4:00 pm
+                    Thursday:	11:00 am - 4:00 pm
+                    Friday:	    11:00 am - 4:00 pm
+                    Saturday:	Closed
+                    Sunday:	    Closed
+                    `
 ]
+
 let axios = require('axios').default
 let microBT = require('microbit-web-bluetooth')
 
@@ -93,7 +109,8 @@ let tempArr = []
 let avgTemp;
 let lightArr = []
 let avgLight;
-
+let pointsVisitedArn = useRef(0);
+let pointsVisitedWood = useRef(0);
 //Used to track the total session and building time.
 //Will update the time data for pie and bar chart
 let connectionTime = useRef(0)
@@ -141,9 +158,7 @@ const tempHandler = async (event) => {
                 }
 }
 
-/*const magnetHandler = (event) =>{
-    console.log("Here's the magnetometer reading:" +event.detail.y)
-}*/
+
 
 const buttonA_Handler = (event) => {
     if(event.detail == 1){
@@ -224,7 +239,6 @@ let BTcheck = async () => {
         await services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
         await services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
         await services.temperatureService.setTemperaturePeriod(3000)
-        services.magnetometerService.setMagnetometerPeriod(10000)
        
         //await services.magnetometerService.addEventListener("magnetometerbearingchanged",magnetHandler)
         await services.temperatureService.addEventListener("temperaturechanged",tempHandler)
@@ -248,43 +262,40 @@ let BTcheck = async () => {
             else if(oldLAvg != undefined)
                 console.log("we made it here"+avgLight)
                 if(oldLAvg < avgLight - 50 || oldLAvg > avgLight + 50){
-                    setEnvClick(true)
+                    set
+                    EnvClick(true)
                     console.log("The pop up should pop up:  "+envClick)
                 }
         }
         catch(err){
-            console.log(err + "pain")
+            console.log(err+" pain")
         }
     },3000)
-
+    let magnetReading;
     setInterval(async function(){
         try{
-            console.log((await services.magnetometerService.readMagnetometerData()).x)
-            console.log((await services.magnetometerService.readMagnetometerData()).y)
-            console.log((await services.magnetometerService.readMagnetometerData()).z)
+            magnetReading = await (await services.magnetometerService.readMagnetometerData()).z
+            console.log(magnetReading)
+
+            if(magnetReading <= -28000 && arnRunning == true && pointsVisitedArn.current < 3){
+                pointsVisitedArn.current += 1;
+            }
+
+            if(magnetReading <= -28000 && woodRunning == true && pointsVisitedWood.current < 3){
+                
+                pointsVisitedWood.current += 1;
+                //console.log(pointsVisitedWood)
+            }
+
         }catch(err){
-            console.log(err+ " suffering")
+            console.log(err+" suffering")
         }
     },3000)
 
     }catch(err){
-        console.log(err +' hurts')
+        console.log(err+' hurts')
     }
 }
-//Create filter for interest point beacons
-let options = { 
-    filters:[
-        {services: ['2eaaf8b0-e034-49fe-9dc3-b88b8c2b77e3']}
-    ]
-}
-let handleInterestScan = () =>{
-    navigator.bluetooth.requestDevice({"acceptAllDevices": true}).then(function(beacon){
-        console.log("did it work?"+beacon.id)
-    }
-        
-    )
-}
-
 
 
 let handleNearest = async () => {
@@ -333,18 +344,15 @@ let handleEnvClick = () => setEnvClick(false)
                 
                 </Popup>
                 <div>
-                
-                <MicroButton onClick ={handleInterestScan}>
-                    Check Interest Points
-                </MicroButton>
+            
                 <Tabs selectedIndex={tabIndex} onSelect={index => setTabIndex(index)}>
                     <TabList>
                         <Tab>Buildings</Tab>
                         <Tab>Data</Tab>
                     </TabList>
                     <TabPanel>
-                    <BuildingPic src ={nearest} onClick ={handleClick}>
-            </BuildingPic>
+                    <BPic src={nearest} onClick ={handleClick}>
+            </BPic>
             <Popup trigger ={click}>
                     <p>
                         {nearestText}
@@ -355,6 +363,8 @@ let handleEnvClick = () => setEnvClick(false)
                     </TabPanel>
                     
                     <TabPanel>
+                    <div style={{ width: '100%', height: 300 }}>
+                    <ResponsiveContainer>
                     <BarChart width={730} height={250} data={barData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
@@ -364,11 +374,24 @@ let handleEnvClick = () => setEnvClick(false)
                         <Bar dataKey="Time_in_Arnett" fill="#8884d8" />
                         <Bar dataKey="Time_in_Woodruff" fill="#82ca9d" />
                     </BarChart>
+                    </ResponsiveContainer>
 
+                    <ResponsiveContainer>
                     <PieChart width={730} height={250}>
                         <Pie data={pieData} dataKey="Time_Percentage" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" label={(entry) => entry.name}/>
                     </PieChart>
-                    
+                    </ResponsiveContainer>
+                    </div>
+
+                    <div>
+                        <p>
+                            You have visited: {pointsVisitedArn.current} out of 3 interest points in Arnett
+                        </p>
+
+                        <p>
+                            You have visited: {pointsVisitedWood.current} out of 3 interest points in Woodruff
+                        </p>
+                    </div>
                     </TabPanel>
                     </Tabs>
                     </div>

@@ -164,7 +164,7 @@ const buttonA_Handler = (event) => {
     if(event.detail == 1){
         arnRunning = true
         woodRunning = false
-        axios.post('/nearest',{
+        axios.post('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest',{
             ButtonPressA: event.detail
         })
         handleNearest()  
@@ -178,7 +178,7 @@ const buttonB_Handler = (event) => {
     if(event.detail == 1){
         woodRunning = true
         arnRunning = false
-        axios.post('/nearest',{
+        axios.post('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest',{
             ButtonPressB: event.detail
         })
         handleNearest()
@@ -262,8 +262,7 @@ let BTcheck = async () => {
             else if(oldLAvg != undefined)
                 console.log("we made it here"+avgLight)
                 if(oldLAvg < avgLight - 50 || oldLAvg > avgLight + 50){
-                    set
-                    EnvClick(true)
+                    setEnvClick(true)
                     console.log("The pop up should pop up:  "+envClick)
                 }
         }
@@ -299,7 +298,7 @@ let BTcheck = async () => {
 
 
 let handleNearest = async () => {
-    let response = await axios.get('/nearest')
+    let response = await axios.get('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest')
     let data = await response.data
     console.log(data);
 

@@ -6,6 +6,7 @@ import SpiritTime from '../assets/spiritTime.jpg'
 import CafeImage from '../assets/cafe.jpg'
 import ArchImage from '../assets/archives.jpg'
 import SculptImage from '../assets/woodiSculpt.jpg'
+import JenkinsImage from '../assets/honors.jpg'
 
 /*let Collage = styled.div`
 margin: 10px;
@@ -67,20 +68,25 @@ The archives are located on the upper level of the Library in the Virginia Lacy 
 and similarly students can make appointments to view the archives.`
 ]
 let ArnPointText = [
-    `This is the sculpture Spiritual Time blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah`
+    `This is the sculpture Spiritual Time it can be found directly outside of Trevor Arnett hall, and was created by Spelman
+    Professor: Frank Toby Martin. It was commissioned in 1996 to commemorate the Summer Olympics of that year.`
     ,
-    `These are some pieces from the Clark Atlanta Art Museum blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah`
+    `These are some pieces from the Clark Atlanta Art Museum, the works include contemporary works,Historic and Modern
+    African American works, and African works. Regarding works historic to CAU the museum includes a series of murals known as the
+    "Art of the Negro".The Art of the Negro mural series was painted by Hale Aspacio Woodruff (1900-1980) and 
+    consists of six, 12 x 12 foot oil on canvas panels. Woodruff, founder of the Atlanta University art department 
+    and permanent collection, painted the murals between 1950 and 1951. Woodruff aspired to providing 
+    the university community with a global narrative on the cultural history of Africans in the Americas. Some of the notable
+    artists that are included within the museum are the following: William H. Johnson, Charles White, Elizabeth Catlett, 
+    Sam Gilliam, Jacob Lawrence, and Norman Lewis`
     ,
-    ` 3rd Image blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
-    blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah`]
+    `While the facilities are not pictured on our left thes are some of the students who are part of the Isabella T. Jenkins
+    Honors Program, the related office is hosted within Trevor Arnett. The Honors Program is made available to freshman
+    students who excelled in high school and is there to promote intellectual independence. They do require a minimum
+    of 20 service hours to maintain membership each semester.`]
 
 let WoodyArr = [CafeImage,SculptImage,ArchImage]
-let ArnArr = [SpiritTime,MuseumImage]
+let ArnArr = [SpiritTime,MuseumImage,JenkinsImage]
 
 let axios = require('axios').default
 
@@ -97,7 +103,7 @@ function InterestPoint(){
     let handleClick2 = () => setClick2(!click2)
 
     let handleInterestPoints = async() => {
-        let response = await axios.get('/nearest')
+        let response = await axios.get('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest')
         let data = await response.data
     
         if(data == "WDF"){

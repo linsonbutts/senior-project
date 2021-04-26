@@ -94,11 +94,9 @@ what we now know it as today the Clark Atlanta University Art Museum.
                     `
 ]
 
-const fetch = require('node-fetch')
-let url = "/.netlify/functions/server/nearest"
-
 let axios = require('axios').default
 let microBT = require('microbit-web-bluetooth')
+let url = "https://guide-app-server.herokuapp.com/nearest"
 
 function Building(){
 let [tabIndex, setTabIndex] = useState(0);
@@ -163,36 +161,39 @@ const tempHandler = async (event) => {
 
 
 
-const buttonA_Handler = (event) => {
-    if(event.detail == 1){
-        arnRunning = true
-        woodRunning = false
-        fetch(url, {
-        method: 'post',
-        ButtonPressA:    event.detail
-    })
-    
-        handleNearest()  
+const buttonA_Handler = async (event) => {
+    try{
+        if(event.detail == 1){
+            arnRunning = true
+            woodRunning = false
+            await axios.post(url,{
+                ButtonPressA: event.detail
+            })
+            handleNearest()
+        }
+        else if(event.detail == 2){
+            woodRunning = false
+        }
+    } catch(err){
+        console.log(err+ "suffering")
     }
-    if(event.detail == 2){
-        arnRunning = false
-    } 
-    
 }
-const buttonB_Handler = (event) => {
-    if(event.detail == 1){
-        woodRunning = true
-        arnRunning = false
-        fetch(url, {
-        method: 'post',
-        ButtonPressB:    event.detail
-    })
-        handleNearest()
+const buttonB_Handler = async (event) => {
+    try{
+        if(event.detail == 1){
+            woodRunning = true
+            arnRunning = false
+            await axios.post(url,{
+                ButtonPressB: event.detail
+            })
+            handleNearest()
+        }
+        else if(event.detail == 2){
+            woodRunning = false
+        }
+    } catch(err){
+        console.log(err+ "suffering")
     }
-    else if(event.detail == 2){
-        woodRunning = false
-    }
-    
 }
 
 function addWoodySec(){
@@ -304,8 +305,8 @@ let BTcheck = async () => {
 
 
 let handleNearest = async () => {
-    let response = await fetch(url)
-    let data = await response.text()
+    let response = await axios.get(url)
+    let data = await response.data
     console.log(data);
 
     if(data == "WDF"){

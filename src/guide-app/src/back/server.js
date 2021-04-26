@@ -6,7 +6,7 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
-let port = (8080 || process.env.PORT)
+let port = process.env.PORT
 let buildingCode = "WDF";
 
 app.get('/nearest',function(req,res){

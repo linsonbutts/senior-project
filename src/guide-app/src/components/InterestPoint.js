@@ -91,7 +91,7 @@ let ArnArr = [SpiritTime,MuseumImage,JenkinsImage]
 let axios = require('axios').default
 const fetch = require('node-fetch')
 
-let url = "https://sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest"
+let url = "https://guide-app-server.herokuapp.com/nearest"
 
 function InterestPoint(){
     let [click,setClick] = useState(false)
@@ -106,13 +106,10 @@ function InterestPoint(){
     let handleClick2 = () => setClick2(!click2)
 
     let handleInterestPoints = async() => {
-        let response = await fetch(url)
-        let data = await response.text()
-        console.log(data)
-
-        /*let response = await axios.get(url)
+    
+        let response = await axios.get(url)
         let data = await response.data
-        console.log(data+ "   from axios")*/
+        console.log(data+ "   from axios")
     
         if(data == "WDF"){
             setInterestPoints(WoodyArr)

@@ -94,7 +94,7 @@ what we now know it as today the Clark Atlanta University Art Museum.
                     `
 ]
 
-//const fetch = require('node-fetch')
+const fetch = require('node-fetch')
 let url = "/.netlify/functions/server/nearest"
 
 let axios = require('axios').default
@@ -167,9 +167,11 @@ const buttonA_Handler = (event) => {
     if(event.detail == 1){
         arnRunning = true
         woodRunning = false
-    axios.post(url,{
-        ButtonPressA: event.detail
+        fetch(url, {
+        method: 'post',
+        ButtonPressA:    event.detail
     })
+    
         handleNearest()  
     }
     if(event.detail == 2){
@@ -181,9 +183,10 @@ const buttonB_Handler = (event) => {
     if(event.detail == 1){
         woodRunning = true
         arnRunning = false
-        axios.post(url,{
-            ButtonPressB: event.detail
-        })
+        fetch(url, {
+        method: 'post',
+        ButtonPressB:    event.detail
+    })
         handleNearest()
     }
     else if(event.detail == 2){
@@ -301,8 +304,8 @@ let BTcheck = async () => {
 
 
 let handleNearest = async () => {
-    let response = await axios.get(url)
-    let data = await response.data
+    let response = await fetch(url)
+    let data = await response.text()
     console.log(data);
 
     if(data == "WDF"){

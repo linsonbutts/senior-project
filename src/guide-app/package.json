@@ -13,6 +13,7 @@
     "microbit-web-bluetooth": "^0.6.0",
     "microblue": "^0.1.1",
     "node-beacon-scanner": "^0.2.2",
+    "node-fetch": "^2.6.1",
     "node-gyp": "^7.1.2",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",

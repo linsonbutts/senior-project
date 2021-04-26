@@ -94,9 +94,10 @@ what we now know it as today the Clark Atlanta University Art Museum.
                     `
 ]
 
-const fetch = require('node-fetch')
-let url = "https://sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest"
-  
+//const fetch = require('node-fetch')
+let url = "/.netlify/functions/server/nearest"
+
+let axios = require('axios').default
 let microBT = require('microbit-web-bluetooth')
 
 function Building(){
@@ -166,9 +167,8 @@ const buttonA_Handler = (event) => {
     if(event.detail == 1){
         arnRunning = true
         woodRunning = false
-        fetch(url, {
-        method: 'post',
-        ButtonPressA:    event.detail
+    axios.post(url,{
+        ButtonPressA: event.detail
     })
         handleNearest()  
     }
@@ -181,10 +181,9 @@ const buttonB_Handler = (event) => {
     if(event.detail == 1){
         woodRunning = true
         arnRunning = false
-        fetch(url, {
-        method: 'post',
-        ButtonPressB:    event.detail
-    })
+        axios.post(url,{
+            ButtonPressB: event.detail
+        })
         handleNearest()
     }
     else if(event.detail == 2){
@@ -302,8 +301,8 @@ let BTcheck = async () => {
 
 
 let handleNearest = async () => {
-    let response = await fetch(url)
-    let data = await response.text()
+    let response = await axios.get(url)
+    let data = await response.data
     console.log(data);
 
     if(data == "WDF"){

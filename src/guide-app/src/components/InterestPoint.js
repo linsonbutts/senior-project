@@ -89,11 +89,10 @@ let WoodyArr = [CafeImage,SculptImage,ArchImage]
 let ArnArr = [SpiritTime,MuseumImage,JenkinsImage]
 
 let axios = require('axios').default
-let axiosConfig = {
-    headers: {
-        "Access-Control-Allow-Origin": "*"
-    }
-  };
+const fetch = require('node-fetch')
+
+let url = "https://sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest"
+
 function InterestPoint(){
     let [click,setClick] = useState(false)
     let [click1,setClick1] = useState(false)
@@ -107,8 +106,8 @@ function InterestPoint(){
     let handleClick2 = () => setClick2(!click2)
 
     let handleInterestPoints = async() => {
-        let response = await axios.get('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest',axiosConfig)
-        let data = await response.data
+        let response = await fetch(url)
+        let data = await response.text()
         console.log(data)
     
         if(data == "WDF"){

@@ -94,12 +94,8 @@ what we now know it as today the Clark Atlanta University Art Museum.
                     `
 ]
 
-let axios = require('axios').default
-let axiosConfig = {
-    headers: {
-        "Access-Control-Allow-Origin": "*"
-    }
-  };
+const fetch = require('node-fetch')
+let url = "https://sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest"
   
 let microBT = require('microbit-web-bluetooth')
 
@@ -170,9 +166,10 @@ const buttonA_Handler = (event) => {
     if(event.detail == 1){
         arnRunning = true
         woodRunning = false
-        axios.post('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest',{
-            ButtonPressA: event.detail
-        })
+        fetch(url, {
+        method: 'post',
+        ButtonPressA:    event.detail
+    })
         handleNearest()  
     }
     if(event.detail == 2){
@@ -184,9 +181,10 @@ const buttonB_Handler = (event) => {
     if(event.detail == 1){
         woodRunning = true
         arnRunning = false
-        axios.post('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest',{
-            ButtonPressB: event.detail
-        })
+        fetch(url, {
+        method: 'post',
+        ButtonPressB:    event.detail
+    })
         handleNearest()
     }
     else if(event.detail == 2){
@@ -304,8 +302,8 @@ let BTcheck = async () => {
 
 
 let handleNearest = async () => {
-    let response = await axios.get('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/',axiosConfig)
-    let data = await response.data
+    let response = await fetch(url)
+    let data = await response.text()
     console.log(data);
 
     if(data == "WDF"){

@@ -95,6 +95,12 @@ what we now know it as today the Clark Atlanta University Art Museum.
 ]
 
 let axios = require('axios').default
+let axiosConfig = {
+    headers: {
+        "Access-Control-Allow-Origin": "*"
+    }
+  };
+  
 let microBT = require('microbit-web-bluetooth')
 
 function Building(){
@@ -298,7 +304,7 @@ let BTcheck = async () => {
 
 
 let handleNearest = async () => {
-    let response = await axios.get('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/.netlify/functions/server/nearest')
+    let response = await axios.get('https://60863dad7659baf639105ee8--sleepy-swartz-da47cf.netlify.app/',axiosConfig)
     let data = await response.data
     console.log(data);
 

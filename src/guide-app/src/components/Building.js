@@ -47,6 +47,11 @@ flex-basis: 35%;
     max-width: 325px;    
 }
 `
+const CompleteBox = styled.div`
+  border: solid rgba(15,235,0,0.6);
+  padding 10px;
+  flex-basis:55%;
+`
 
 let buildingText = [`
 Constructed in 1982, the Atlanta University Center (AUC) 
@@ -104,6 +109,7 @@ let [envClick, setEnvClick] = useState(false);
 let [click,setClick] = useState(false)
 let [nearest, setNearest] = useState(Woody)
 let [nearestText,setNearestText] = useState(buildingText[0])
+let [completedTour,setCompletedTour] = useState("none")
 let arnTime = useRef(0)
 let woodTime = useRef(0)
 let tempArr = []
@@ -281,7 +287,7 @@ let BTcheck = async () => {
     setInterval(async function(){
         try{
             magnetReading = await (await services.magnetometerService.readMagnetometerData()).z
-            console.log(magnetReading)
+            console.log("This is the magnet reading"+magnetReading)
 
             if(magnetReading <= -28000 && arnRunning == true && pointsVisitedArn.current < 3){
                 pointsVisitedArn.current += 1;
@@ -292,12 +298,13 @@ let BTcheck = async () => {
                 pointsVisitedWood.current += 1;
                 //console.log(pointsVisitedWood)
             }
-
+            if(pointsVisitedArn.current >= 3 && pointsVisitedWood.current >= 3){
+                setCompletedTour("inline-block")
+            }
         }catch(err){
             console.log(err+" suffering")
         }
     },3000)
-
     }catch(err){
         console.log(err+' hurts')
     }
@@ -336,14 +343,36 @@ let handleEnvClick = () => setEnvClick(false)
                 <p>
                     Hit A or B on microBit to indicate you have entered a building. A for Arnett and B for Woodruff <br></br>
                     You will be asked if you have entered a building <br></br>
-                    if the environment around you has changed
+                    if the environment around you has changed.
                 </p>
+                <CompleteBox style = {{display: completedTour}}>
+                        <div>
+                            <p>
+                                Congratulations you have vivisted every listed point of interest on the tour.
+                                Please feel free to continue touring the campus at your leisure and return the 
+                                device to the vendor you received it from. Here are some links to other sites that 
+                                go into further details about the history of CAU as well as explain more about each 
+                                of our wonderful facilities.
+                            </p>
+                            <a href="https://www.auctr.edu/about/overview/about-our-library/"> About Woodruff Library </a>
+                            <br></br>
+                            <a href="https://www.auctr.edu/about/overview/art-in-our-library/"> Art in Woodruff </a>
+                            <br></br>
+                            <a href="https://www.auctr.edu/archives/"> Library Archives </a>
+                            <br></br>
+                            <a href="https://www.cau.edu/art-museum/about-us.html"> History of CAU Art Museum </a>
+                        </div>
+                    </CompleteBox>
                 <Popup trigger={envClick}>
                     <div onClick = {handleEnvClick}>
                     <p>
                     Hey it seems like the environment around you has changed
                     Remember to press A or B to indicate which building you have entered
-                    and hold A or B if you have exited a building
+                    and hold A or B if you have exited a building.
+
+                    If you have not entered or exited a building please make sure to keep the
+                    device upright, around you and away from overly cold or hot environments, so
+                    that it can properly monitor your environment.
                     </p>
                     </div>
 
@@ -401,6 +430,8 @@ let handleEnvClick = () => setEnvClick(false)
                     </TabPanel>
                     </Tabs>
                     </div>
+
+                    
             </Layout>
             
         </React.Fragment>

@@ -109,7 +109,6 @@ function InterestPoint(){
     
         let response = await axios.get(url)
         let data = await response.data
-        console.log(data+ "   from axios")
     
         if(data == "WDF"){
             setInterestPoints(WoodyArr)
